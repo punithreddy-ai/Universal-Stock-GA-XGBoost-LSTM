@@ -442,10 +442,10 @@ The methodology is an adaptation of the idea of combining Genetic Algorithm feat
 
 ## 👤 Author
 
-**Varun S**
-Computer Science & Engineering
+**PUNITHREDDY K R**
+Computer Science and Engineering
 
-GitHub: [https://github.com/varuns1602-D](https://github.com/varuns1602-D)
+GitHub: [https://github.com/punithreddy-ai](https://github.com/punithreddy-ai)
 
 ---
 
