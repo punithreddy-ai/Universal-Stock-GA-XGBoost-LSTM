@@ -1,820 +1,468 @@
-# 📈 Universal Stock Direction Prediction
-### GA-Selected XGBoost + Universal LSTM for NSE Stock Prediction
+<div align="center">
 
-<p align="center">
-  <strong>AI-powered stock direction classification using technical indicators, Genetic Algorithm feature selection, XGBoost, and LSTM.</strong>
-</p>
+# 📈 NSE Stock Direction Prediction
 
-<p align="center">
-  <img src="https://img.shields.io/badge/Python-3.10%2B-blue?style=for-the-badge&logo=python" alt="Python">
-  <img src="https://img.shields.io/badge/TensorFlow-2.x-orange?style=for-the-badge&logo=tensorflow" alt="TensorFlow">
-  <img src="https://img.shields.io/badge/XGBoost-ML-green?style=for-the-badge" alt="XGBoost">
-  <img src="https://img.shields.io/badge/NSE-India-red?style=for-the-badge" alt="NSE">
-  <img src="https://img.shields.io/badge/Status-Academic%20Project-purple?style=for-the-badge" alt="Status">
-</p>
+### Universal GA-XGBoost + LSTM classifiers for next-day UP / DOWN prediction of NSE stocks
 
----
+![Python](https://img.shields.io/badge/Python-3-3776AB?logo=python&logoColor=white)
+![Streamlit](https://img.shields.io/badge/Streamlit-Frontend-FF4B4B?logo=streamlit&logoColor=white)
+![TensorFlow](https://img.shields.io/badge/TensorFlow%20%2F%20Keras-LSTM-FF6F00?logo=tensorflow&logoColor=white)
+![XGBoost](https://img.shields.io/badge/XGBoost-Classifier-189AB4)
+![Genetic Algorithm](https://img.shields.io/badge/Feature%20Selection-Genetic%20Algorithm-6A5ACD)
+![Data](https://img.shields.io/badge/Market%20Data-Yahoo%20Finance-720E9E)
+![Use](https://img.shields.io/badge/Use-Educational-lightgrey)
 
-## 🧭 Table of Contents
+[Overview](#-project-overview) •
+[Features](#-key-features) •
+[Architecture](#-system-architecture) •
+[Model](#-model-details) •
+[Run locally](#-running-the-application-locally-windows) •
+[Performance](#-model-performance) •
+[Limitations](#-limitations) •
+[Author](#-author)
 
-- [📌 About the Project](#-about-the-project)
-- [🎯 Objectives](#-objectives)
-- [✨ Key Features](#-key-features)
-- [🧠 System Architecture](#-system-architecture)
-- [🔬 Methodology](#-methodology)
-- [🎨 UI/UX Design](#-uiux-design)
-- [📊 Machine Learning Pipeline](#-machine-learning-pipeline)
-- [📁 Project Structure](#-project-structure)
-- [⚙️ Technologies Used](#️-technologies-used)
-- [🚀 Installation](#-installation)
-- [▶️ How to Run](#️-how-to-run)
-- [📈 Evaluation](#-evaluation)
-- [📦 Generated Outputs](#-generated-outputs)
-- [🔐 Data & Security](#-data--security)
-- [🧪 Research Integrity](#-research-integrity)
-- [🔮 Future Scope](#-future-scope)
-- [👨‍💻 Author](#-author)
-- [⚠️ Disclaimer](#️-disclaimer)
+</div>
 
 ---
 
-# 📌 About the Project
+## 📌 Project Overview
 
-**Universal Stock Direction Prediction** is an academic machine-learning project designed to classify the **next-day direction of NSE stocks** as:
+This project is a **Streamlit application** that predicts the **next-day closing direction** (**UP** or **DOWN**) of NSE-listed stocks using two *universal* classifiers trained across many stocks:
 
-- 🟢 **UP**
-- 🔴 **DOWN**
+* a **Universal GA-XGBoost classifier** — XGBoost trained on a feature subset chosen by a **Genetic Algorithm**
+* a **Universal LSTM classifier** — a TensorFlow/Keras network that reads a **60-trading-day** window
 
-The project combines traditional technical analysis with machine learning and deep learning.
+Both models output **P(UP)**, the estimated probability of the UP class. The app shows each model's P(UP), a **model consensus**, historical price charts, technical indicators, recorded model performance, and methodology notes.
 
-The core pipeline integrates:
-
-```text
-NSE Historical Data
-        ↓
-Data Cleaning
-        ↓
-Technical Indicators
-        ↓
-Feature Engineering
-        ↓
-Genetic Algorithm
-        ↓
-Feature Selection
-        ↓
-XGBoost Classification
-        ↓
-Universal LSTM
-        ↓
-Threshold Selection
-        ↓
-Evaluation & Leakage Audit
-        ↓
-Prediction Results
-```
-
-The project is designed around a **universal multi-stock approach**, allowing the same modeling framework to work across multiple supported NSE stocks.
+> [!IMPORTANT]
+> The application predicts **direction only** (UP / DOWN). It does **not** predict an exact future price or a percentage move.
 
 ---
 
-# 🎯 Objectives
+## 🎯 Why This Project
 
-### 1. 📊 Data Processing
-Prepare historical NSE stock data using chronological processing and stock-wise handling.
-
-### 2. 🧮 Feature Engineering
-Generate technical indicators and derived market features for model training.
-
-### 3. 🧬 Intelligent Feature Selection
-Use a **Genetic Algorithm (GA)** to identify a useful subset of technical features.
-
-### 4. 🌲 XGBoost Classification
-Use XGBoost to classify the next trading day's direction.
-
-### 5. 🧠 LSTM Sequence Learning
-Use a Universal LSTM model to learn temporal patterns from historical sequences.
-
-### 6. 🔍 Robust Evaluation
-Evaluate models using multiple classification metrics and perform a leakage audit.
-
-### 7. 📦 Deployment Readiness
-Save model artifacts and feature information for future integration with a Streamlit or web-based prediction interface.
+* **One model, many stocks.** Instead of training a separate model per company, one universal model learns common technical patterns from a multi-stock training universe. Features are engineered in a *relative* (scale-free) form, so stocks with very different price levels can share the same model.
+* **Two complementary approaches.** A tree-based classifier on engineered indicators and a sequence model on 60-day windows are shown side by side, so you can see where they agree and disagree.
+* **Honest framing.** Next-day direction is a hard, noisy problem. The app reports probabilities and recorded evaluation results, and documents its limitations instead of promising returns.
 
 ---
 
-# ✨ Key Features
+## ✨ Key Features
 
-| Feature | Description |
+| Area | What the application provides |
 |---|---|
-| 📈 NSE Stock Data | Historical Indian stock-market data |
-| 🧹 Data Cleaning | Stock-wise chronological preprocessing |
-| 📊 Technical Indicators | Momentum, trend, volatility and volume features |
-| 🧬 Genetic Algorithm | Automated feature subset selection |
-| 🌲 XGBoost | Tree-based direction classifier |
-| 🧠 Universal LSTM | Sequence-based deep-learning model |
-| 🎯 Threshold Optimization | Validation-based classification threshold |
-| 🧪 Ablation Study | Comparison of different feature/model configurations |
-| 🔐 Leakage Audit | Checks for inappropriate information flow |
-| 📉 Confusion Matrix | Detailed classification analysis |
-| 📊 ROC-AUC | Ranking-based model evaluation |
-| 💾 Model Export | Saves models and inference artifacts |
-| 🚀 Deployment Ready | Designed for future Streamlit integration |
+| 🔎 **Stock selection** | Choose a stock to analyse |
+| 🌐 **Data source: Yahoo Finance** | Fetch OHLCV market history for inference |
+| 📄 **Data source: CSV upload** | Optionally upload your own **OHLCV** CSV |
+| 🔮 **Next-day prediction** | UP / DOWN direction for the next trading day |
+| 🌲 **XGBoost P(UP)** | Probability from the Universal GA-XGBoost model |
+| 🧠 **LSTM P(UP)** | Probability from the Universal LSTM model (60-trading-day sequence) |
+| 🤝 **Model consensus** | Shows whether the two models agree |
+| 📊 **Historical price charts** | Interactive price history |
+| 🧮 **Technical indicators** | Indicator views derived from the price history |
+| 🏁 **Model performance** | Recorded evaluation results of the trained models |
+| 📚 **Methodology / architecture** | In-app explanation of how the models were built |
 
 ---
 
-# 🧠 System Architecture
+## 🧬 AI / Model Architecture
 
 ```text
-┌──────────────────────────────┐
-│       NSE Historical Data    │
-│          2015 – 2024         │
-└──────────────┬───────────────┘
-               │
-               ▼
-┌──────────────────────────────┐
-│       Data Preprocessing     │
-│  Cleaning • Sorting • Checks │
-└──────────────┬───────────────┘
-               │
-               ▼
-┌──────────────────────────────┐
-│     Technical Indicators     │
-│ Trend • Momentum • Volume    │
-│ Volatility • Price Features  │
-└──────────────┬───────────────┘
-               │
-               ▼
-┌──────────────────────────────┐
-│    Genetic Algorithm (GA)    │
-│       Feature Selection      │
-└──────────────┬───────────────┘
-               │
-               ▼
-      ┌───────────────────┐
-      │ Selected Features │
-      └─────────┬─────────┘
-                │
-        ┌───────┴────────┐
-        ▼                ▼
-┌───────────────┐  ┌───────────────┐
-│   XGBoost     │  │  Universal    │
-│ Classifier    │  │     LSTM      │
-└───────┬───────┘  └───────┬───────┘
-        │                  │
-        └────────┬─────────┘
-                 ▼
-      ┌─────────────────────┐
-      │ Prediction &        │
-      │ Performance Analysis│
-      └─────────────────────┘
+                    ┌──────────────────────────────────────────────┐
+                    │          84 engineered features              │
+                    │ (relative technical / price-volume features) │
+                    └──────────────────────┬───────────────────────┘
+                                           │
+                         Genetic Algorithm feature selection
+                                           │
+                                  43 selected features
+                    ┌──────────────────────┴───────────────────────┐
+                    │                                              │
+          ┌─────────▼──────────┐                      ┌────────────▼────────────┐
+          │ Universal          │                      │ Universal LSTM          │
+          │ GA-XGBoost         │                      │ (60-trading-day window) │
+          │ (latest row)       │                      │ TensorFlow / Keras      │
+          └─────────┬──────────┘                      └────────────┬────────────┘
+                    │ P(UP)                                        │ P(UP)
+                    └──────────────────────┬───────────────────────┘
+                                           ▼
+                              UP / DOWN + model consensus
 ```
+
+* **Training universe:** 100 stocks
+* **Feature engineering:** 84 features → **43** kept after Genetic Algorithm selection
+* **LSTM input:** 60 trading days per sample
 
 ---
 
-# 🔬 Methodology
+## 🏗️ System Architecture
 
-## Step 1 — Data Acquisition
+```mermaid
+flowchart LR
+    subgraph Inputs
+        YF[Yahoo Finance\nOHLCV history]
+        CSV[Optional uploaded\nOHLCV CSV]
+    end
 
-The project uses the Kaggle dataset:
+    subgraph Backend
+        FE[feature_engineering.py\nrelative features]
+        PB[prediction_backend.py]
+        MR[model_replay.py]
+        ART[(model_artifacts/\ntrained models + scaler + config)]
+    end
 
-```text
-manavanghan/nse-india-stock-market-data-2015-2024
+    subgraph Models
+        XGB[Universal GA-XGBoost]
+        LSTM[Universal LSTM\n60-day window]
+    end
+
+    subgraph Streamlit UI
+        APP[app.py]
+        DASH[dashboard_ui.py]
+        PRED[ui_prediction.py]
+        CH[ui_charts.py]
+        PERF[ui_performance.py]
+        METH[ui_methodology.py]
+    end
+
+    YF --> PB
+    CSV --> PB
+    PB --> FE --> XGB
+    FE --> LSTM
+    ART --> XGB
+    ART --> LSTM
+    XGB --> PB
+    LSTM --> PB
+    PB --> APP
+    APP --> DASH --> PRED
+    DASH --> CH
+    DASH --> PERF
+    DASH --> METH
+    MR -.-> PB
 ```
 
-The notebook downloads the dataset through **KaggleHub**.
-
-Expected primary dataset:
-
-```text
-nifty500_stocks.csv
-```
+> The diagram shows the modules listed in this repository's structure. See [Project Structure](#-project-structure) for what each file is responsible for.
 
 ---
 
-## Step 2 — Data Preprocessing
+## 🔄 Prediction Workflow
 
-The data is processed independently for each stock.
-
-Main operations include:
-
-- Date conversion
-- Chronological sorting
-- Duplicate handling
-- Missing-value handling
-- Stock-wise processing
-- Target generation
-- Train/validation/test separation
-
-The project uses chronological splitting rather than random shuffling for the main time-series workflow.
-
----
-
-## Step 3 — Technical Feature Engineering
-
-The model uses market-derived features based on:
-
-### 📈 Trend
-- Moving averages
-- Exponential moving averages
-- Trend-related indicators
-
-### ⚡ Momentum
-- RSI
-- MACD
-- Momentum-related features
-
-### 🌪️ Volatility
-- ATR
-- Rolling volatility
-- Price-range features
-
-### 📊 Volume
-- Volume changes
-- Volume-related indicators
-
-### 💹 Price
-- Open
-- High
-- Low
-- Close
-- Returns
-- Price relationships
-
----
-
-# 🧬 Genetic Algorithm + XGBoost
-
-The Genetic Algorithm searches for useful feature subsets.
-
-Conceptually:
+```mermaid
+flowchart TD
+    A[Market history\nfor the selected stock] --> B[Data normalization]
+    B --> C[Feature engineering\n84 features]
+    C --> D[GA-selected features\n43 features]
+    D --> E[XGBoost]
+    D --> F[LSTM\n60-trading-day sequence]
+    E --> G[P&#40;UP&#41; from XGBoost]
+    F --> H[P&#40;UP&#41; from LSTM]
+    G --> I{UP / DOWN\nper model}
+    H --> I
+    I --> J[Model consensus]
+```
 
 ```text
-Initial Population
-       ↓
-Feature Subsets
-       ↓
-Model Fitness
-       ↓
-Selection
-       ↓
-Crossover
-       ↓
-Mutation
-       ↓
-New Generation
-       ↓
-Best Feature Subset
-       ↓
-XGBoost
+Market history
+      ↓
+Data normalization
+      ↓
+Feature engineering
+      ↓
+GA-selected features
+      ↓
+XGBoost + LSTM
+      ↓
+P(UP)
+      ↓
+UP / DOWN
 ```
 
-The objective is to reduce unnecessary features while retaining predictive information.
+### How to read the output
 
----
-
-# 🧠 Universal LSTM
-
-The project also includes a Universal LSTM component.
-
-The LSTM processes historical sequences using a configurable lookback window:
-
-```python
-WINDOW = 60
-```
-
-Conceptually:
-
-```text
-Day 1 ─┐
-Day 2  │
-Day 3  │
- ...   ├──► LSTM ───► Next-Day Direction
-Day 60 │
-       ┘
-```
-
-This allows the model to learn temporal dependencies that may not be represented by individual observations.
-
----
-
-# 🎨 UI/UX Design
-
-Although the current repository is centered around the research notebook, the project is structured for a future **interactive stock-prediction dashboard**.
-
-## 🖥️ Proposed Dashboard
-
-```text
-┌────────────────────────────────────────────────────────────┐
-│  📈 UNIVERSAL STOCK AI                         ● LIVE      │
-├────────────────────────────────────────────────────────────┤
-│                                                            │
-│  Select Stock       Prediction Horizon                    │
-│  ┌─────────────┐    ┌──────────────┐                       │
-│  │ TCS       ▼ │    │ Next Day     │                       │
-│  └─────────────┘    └──────────────┘                       │
-│                                                            │
-│  ┌──────────────────────┐  ┌────────────────────────────┐  │
-│  │   MARKET SIGNAL      │  │       CONFIDENCE            │  │
-│  │                      │  │                             │  │
-│  │       🟢 UP          │  │          78.4%              │  │
-│  │                      │  │     Model Confidence       │  │
-│  └──────────────────────┘  └────────────────────────────┘  │
-│                                                            │
-│  ┌────────────────────────────────────────────────────────┐ │
-│  │                  PRICE / SIGNAL CHART                  │ │
-│  │                                                        │ │
-│  │       ╱╲      ╱╲                                      │ │
-│  │  ╱╲  ╱  ╲____╱  ╲___                                 │ │
-│  │                                                        │ │
-│  └────────────────────────────────────────────────────────┘ │
-│                                                            │
-│  Technical Indicators                                     │
-│  RSI     MACD     ATR     Volume     Trend               │
-│  61.2    Bullish  Normal  ↑          Positive             │
-│                                                            │
-└────────────────────────────────────────────────────────────┘
-```
-
-## 🎨 UI/UX Principles
-
-### 1. Clean Dashboard
-Use a clean card-based layout so users can understand the prediction quickly.
-
-### 2. Visual Prediction Signal
-
-```text
-🟢 UP
-🔴 DOWN
-🟡 NEUTRAL / UNCERTAIN
-```
-
-The interface should make the prediction immediately visible.
-
-### 3. Confidence Visualization
-
-Use a progress indicator or gauge:
-
-```text
-Confidence
-████████████████░░░░ 78%
-```
-
-### 4. Interactive Stock Selection
-
-Users should be able to select a supported NSE stock from a searchable dropdown.
-
-### 5. Interactive Charts
-
-The future dashboard can provide:
-
-- Candlestick chart
-- Moving averages
-- RSI
-- MACD
-- Volume
-- Model prediction markers
-
-### 6. Explainability
-
-A future version can show:
-
-```text
-Why this prediction?
-
-✓ RSI contribution
-✓ Momentum contribution
-✓ Trend contribution
-✓ Volume contribution
-✓ Selected GA features
-```
-
-### 7. Responsive Design
-
-The planned interface should work across:
-
-- 💻 Desktop
-- 📱 Mobile
-- 🖥️ Large displays
-
-### 8. User Experience Flow
-
-```text
-Select Stock
-     ↓
-Load Market Data
-     ↓
-Generate Features
-     ↓
-Run Model
-     ↓
-Display Signal
-     ↓
-Show Confidence
-     ↓
-Explain Prediction
-```
-
----
-
-# 📊 Machine Learning Pipeline
-
-```text
-Raw Stock Data
-      │
-      ▼
-Cleaning & Validation
-      │
-      ▼
-Technical Indicators
-      │
-      ▼
-Feature Matrix
-      │
-      ├───────────────┐
-      │               │
-      ▼               ▼
-   GA Feature      LSTM Sequence
-   Selection          Creation
-      │               │
-      ▼               ▼
-   XGBoost          LSTM
-      │               │
-      └───────┬───────┘
-              ▼
-       Validation Set
-              │
-              ▼
-       Threshold Selection
-              │
-              ▼
-          Test Set
-              │
-              ▼
-      Performance Metrics
-              │
-              ▼
-        Leakage Audit
-```
-
----
-
-# 📁 Project Structure
-
-```text
-Universal-Stock-GA-XGBoost-LSTM/
-│
-├── 📓 Universal_Stock_GA_XGBoost_LSTM_FINAL.ipynb
-│
-├── 📄 README.md
-│
-├── 📦 requirements.txt
-│
-├── 🔒 .gitignore
-│
-├── 📜 LICENSE
-│
-└── 📂 universal_stock_project/
-    │
-    ├── universal_ga_xgboost.json
-    ├── universal_lstm.keras
-    ├── universal_lstm_scaler.pkl
-    ├── universal_features.json
-    ├── universal_config.json
-    ├── feature_engineering.py
-    ├── supported_stocks.json
-    ├── feature_importance.csv
-    ├── per_stock_results.csv
-    ├── universal_model_results.csv
-    ├── ablation_study.csv
-    ├── latest_predictions_all_stocks.csv
-    ├── ga_history.csv
-    ├── test_predictions.csv
-    ├── split_dates.csv
-    └── leakage_audit.json
-```
-
-> The `universal_stock_project/` directory is generated during notebook execution. Large datasets and model artifacts are intentionally excluded from the default GitHub commit.
-
----
-
-# ⚙️ Technologies Used
-
-| Technology | Purpose |
+| Term | Meaning |
 |---|---|
-| 🐍 Python | Core programming language |
-| 🐼 Pandas | Data processing |
-| 🔢 NumPy | Numerical computation |
-| 📊 Matplotlib | Visualization |
-| 🤖 Scikit-learn | Preprocessing and evaluation |
-| 🌲 XGBoost | Classification |
-| 🧠 TensorFlow / Keras | LSTM |
-| 🧬 Genetic Algorithm | Feature selection |
-| 📦 Joblib | Artifact serialization |
-| ☁️ KaggleHub | Dataset acquisition |
-| 📓 Jupyter | Experiment environment |
-| 🚀 Streamlit | Planned UI/deployment layer |
+| **UP** | The model predicts that the **next-day closing direction is upward**. |
+| **DOWN** | The model predicts that the **next-day closing direction is downward**. |
+| **P(UP)** | The model's estimated probability for the **UP class**. |
+| **Model consensus** | Whether the XGBoost and LSTM predictions agree. |
+
+> [!NOTE]
+> **P(UP) is a class probability.** It does **not** mean the stock price will increase by that percentage. A P(UP) of 0.62 means the model assigns 62 % probability to the UP class — not a 62 % price gain.
 
 ---
 
-# 🚀 Installation
+## 🤖 Model Details
 
-## 1. Clone the Repository
+### Universal GA-XGBoost classifier
+* Gradient-boosted trees (**XGBoost**, binary classification) trained on the **43 features** chosen by the Genetic Algorithm.
+* Predicts from the engineered features of the most recent trading day.
 
-```bash
-git clone https://github.com/YOUR_USERNAME/Universal-Stock-GA-XGBoost-LSTM.git
-cd Universal-Stock-GA-XGBoost-LSTM
+### Genetic Algorithm feature selection
+* Each candidate solution is a binary chromosome over the 84 engineered features (1 = feature used, 0 = not used).
+* The search keeps the feature subset that performs best, reducing 84 features to **43**.
+
+### Universal LSTM classifier
+* **TensorFlow / Keras** sequence model.
+* Input: a **60-trading-day** window of the selected features, standardized with the saved scaler.
+* Output: P(UP) for the next trading day.
+
+### "Universal" means
+* The same trained models are used for every supported stock.
+* They were trained on a **100-stock training universe**, not on a single company.
+
+---
+
+## 🧪 Feature Engineering
+
+Features are computed **independently for each stock** from OHLCV data and are expressed in **relative / scale-free form** (for example, price distance from a moving average rather than raw price) so one model can serve stocks with very different price levels.
+
+* **84 engineered features** in total, **43 selected** by the Genetic Algorithm
+* Technical / relative features derived from OHLCV (price returns, moving-average based, momentum, volatility and volume features)
+* The feature code lives in [`feature_engineering.py`](feature_engineering.py) and the exact feature order is stored in [`model_artifacts/universal_features.json`](model_artifacts/universal_features.json)
+
+---
+
+## 🗂️ Dataset Description
+
+Three different kinds of data are involved — they are **not** the same thing:
+
+| Purpose | Data | Notes |
+|---|---|---|
+| **Training data** | Historical **NSE** stock data for a **100-stock universe** | Ends on **2023-12-29**. Used once to train the models. |
+| **Inference data** | **Yahoo Finance** history fetched when you use the app, or an **uploaded OHLCV CSV** | Used only to compute features and produce a prediction. It does **not** retrain anything. |
+| **Saved evaluation results** | Result files stored in the repository | Recorded when the models were evaluated; see [Model Performance](#-model-performance). |
+
+A custom CSV needs **Open, High, Low, Close, Volume** columns with dates.
+
+---
+
+## 📁 Project Structure
+
+```text
+Stock-prediction-using-LSTM/
+├── app.py                          # Streamlit entry point
+├── prediction_backend.py           # Prediction pipeline used by the app
+├── feature_engineering.py          # Feature computation
+├── model_replay.py                 # Model replay / evaluation support
+├── dashboard_ui.py                 # Dashboard layout
+├── ui_prediction.py                # Prediction tab
+├── ui_charts.py                    # Historical price charts / technical indicators
+├── ui_performance.py               # Model performance tab
+├── ui_methodology.py               # Methodology / architecture tab
+├── model_artifacts/                # Trained models and preprocessing files
+├── latest_predictions_all_stocks.csv
+├── requirements.txt
+├── run_app.bat                     # Windows launcher
+└── README.md
 ```
 
-## 2. Create a Virtual Environment
+### `model_artifacts/`
 
-### Windows
+| File | Purpose |
+|---|---|
+| `universal_ga_xgboost.json` | The trained Universal GA-XGBoost model |
+| `universal_lstm.keras` | The trained Universal LSTM model |
+| `universal_lstm_scaler.pkl` | Scaler fitted on the training data, applied to LSTM inputs |
+| `universal_features.json` | Exact feature order (all features, GA-selected features, LSTM features) |
+| `universal_config.json` | Model configuration (window length, thresholds, parameters) |
+| `supported_stocks.json` | List of supported stocks |
 
-```bash
+---
+
+## 🧰 Requirements
+
+* **Windows 10/11** (instructions below; Streamlit itself is cross-platform)
+* **Python 3** and `pip`
+* **Git**
+* Internet connection when using the Yahoo Finance data source
+* Python packages listed in [`requirements.txt`](requirements.txt) (including Streamlit, TensorFlow/Keras and XGBoost)
+
+---
+
+## ⚙️ Installation
+
+```bat
+git clone https://github.com/varuns1602-D/Stock-prediction-using-LSTM.git
+cd Stock-prediction-using-LSTM
+```
+
+## 🐍 Virtual Environment Setup
+
+**Create** the virtual environment:
+
+```bat
 python -m venv venv
+```
+
+**Activate** it (Command Prompt):
+
+```bat
 venv\Scripts\activate
 ```
 
-### macOS / Linux
+<details>
+<summary>Using PowerShell instead?</summary>
 
-```bash
-python3 -m venv venv
-source venv/bin/activate
+```powershell
+venv\Scripts\Activate.ps1
 ```
 
-## 3. Install Dependencies
+If PowerShell blocks the script, run this once in the same window and try again:
 
-```bash
-python -m pip install --upgrade pip
+```powershell
+Set-ExecutionPolicy -Scope Process -ExecutionPolicy Bypass
+```
+</details>
+
+**Install** the requirements:
+
+```bat
 pip install -r requirements.txt
 ```
 
-## 4. Register the Jupyter Kernel
+---
 
-```bash
-python -m ipykernel install --user \
-  --name universal-stock \
-  --display-name "Universal Stock (Python 3.10)"
+## ▶️ Running the Application Locally (Windows)
+
+With the virtual environment activated:
+
+```bat
+streamlit run app.py
 ```
 
-## 5. Launch Jupyter
-
-```bash
-jupyter notebook
-```
-
-Open:
+### 🌐 Exact localhost URL
 
 ```text
-Universal_Stock_GA_XGBoost_LSTM_FINAL.ipynb
+http://localhost:8501
 ```
 
-Select the:
+Streamlit normally opens this page in your browser automatically. If it does not, paste the URL above into your browser.
 
-```text
-Universal Stock (Python 3.10)
-```
+### ⏹️ Stopping the application
 
-kernel.
+Click the terminal window running Streamlit and press **`Ctrl + C`**.
 
----
+### Alternative: `run_app.bat`
 
-# ▶️ How to Run
+The repository includes **`run_app.bat`**, a Windows launcher. You can double-click it, or run it from the project folder:
 
-## Quick Test
-
-For the first execution, use:
-
-```python
-TARGET_STOCK = "TCS"
-QUICK_MODE = True
-```
-
-This reduces the computational workload and is recommended for checking whether the environment and dataset are configured correctly.
-
-## Full Experiment
-
-After confirming the notebook works:
-
-```python
-QUICK_MODE = False
-```
-
-The full experiment can require significantly more CPU/RAM/time.
-
----
-
-# ⚙️ Main Configuration
-
-Important configuration parameters include:
-
-```python
-TARGET_STOCK = "TCS"
-QUICK_MODE = False
-SEED = 42
-USE_ADJ_CLOSE = False
-WINDOW = 60
-THRESHOLD_MODE = "val_balanced_accuracy"
-RUN_TUNING = True
-RUN_LOSO = False
-RUN_SHAP = False
-```
-
-Example stocks:
-
-```python
-TARGET_STOCK = "TCS"
-TARGET_STOCK = "RELIANCE"
-TARGET_STOCK = "INFY"
-TARGET_STOCK = "HDFCBANK"
-TARGET_STOCK = "ICICIBANK"
-TARGET_STOCK = "SBIN"
+```bat
+run_app.bat
 ```
 
 ---
 
-# 📈 Evaluation
+## 🧭 Step-by-Step Usage
 
-The project evaluates classification performance using:
-
-- Accuracy
-- Precision
-- Recall
-- F1-score
-- ROC-AUC
-- Balanced Accuracy
-- Specificity
-- Confusion Matrix
-- Per-stock performance
-- Ablation study
-- Majority-class baseline
-- Leakage audit
-
-The validation set is used for model/threshold decisions, while the test set is reserved for final evaluation.
+1. Start the app and open `http://localhost:8501`.
+2. **Select a stock** from the supported stocks.
+3. Choose the **data source**: **Yahoo Finance**, or **upload an OHLCV CSV**.
+4. Open the **prediction** view to see the next-day **UP / DOWN** result, the **XGBoost P(UP)**, the **LSTM P(UP)**, and the **model consensus**.
+5. Open the **charts** view for historical prices and technical indicators.
+6. Open the **model performance** view for the recorded evaluation results.
+7. Open the **methodology** view for the architecture and training details.
 
 ---
 
-# 📦 Generated Outputs
+## 🔍 Example Prediction Interpretation
 
-After execution, the notebook can generate:
+| Output | Example | How to read it |
+|---|---|---|
+| XGBoost P(UP) | `0.58` | XGBoost assigns 58 % probability to the UP class |
+| LSTM P(UP) | `0.44` | LSTM assigns 44 % probability to UP (56 % to DOWN) |
+| Model consensus | Models disagree | One model leans UP, the other DOWN — treat this as low agreement |
 
-### 🤖 Model Artifacts
-
-```text
-universal_ga_xgboost.json
-universal_lstm.keras
-universal_lstm_scaler.pkl
-```
-
-### ⚙️ Configuration & Features
-
-```text
-universal_features.json
-universal_config.json
-supported_stocks.json
-feature_engineering.py
-```
-
-### 📊 Results
-
-```text
-feature_importance.csv
-per_stock_results.csv
-universal_model_results.csv
-ablation_study.csv
-latest_predictions_all_stocks.csv
-ga_history.csv
-test_predictions.csv
-split_dates.csv
-```
-
-### 🔍 Audit
-
-```text
-leakage_audit.json
-```
+* A probability near **0.50** means the model has little preference either way.
+* The numbers above are **illustrative only** and are not real predictions.
+* P(UP) is **not** an expected percentage price increase.
 
 ---
 
-# 🔐 Data & Security
+## 🏆 Model Performance
 
-Never upload sensitive credentials to GitHub.
+> [!WARNING]
+> **Fill this table from the repository's saved result files before publishing.** The values must be copied exactly as recorded — they are intentionally left blank here so that no number is invented.
 
-The repository's `.gitignore` excludes:
+| Model | Accuracy | Precision | Recall | F1 | ROC-AUC |
+|------|------:|------:|------:|------:|------:|
+| Universal GA-XGBoost | _from results file_ | _from results file_ | _from results file_ | _from results file_ | _from results file_ |
+| Universal LSTM | _from results file_ | _from results file_ | _from results file_ | _from results file_ | _from results file_ |
 
-```text
-.env
-.env.*
-.kaggle/
-kaggle.json
-venv/
-.venv/
-*.keras
-*.pkl
-*.joblib
-```
+**Source of the headline numbers:** _name the result file here (for example the results CSV in `model_artifacts/`)_.
 
-Before pushing:
+Notes on interpreting the results:
 
-```bash
-git status
-```
-
-Check that no API keys, passwords, credentials, or private files are staged.
+* The metrics are **recorded evaluation results from training time**. They are not recalculated by the app and are not a live track record.
+* They describe performance on the data the models were evaluated on, which ends no later than **2023-12-29**.
+* Next-day direction is hard to predict; compare any accuracy figure with a simple baseline (for example always predicting the more common class) before drawing conclusions.
 
 ---
 
-# 🧪 Research Integrity
+## 🖼️ Screenshots / Results
 
-This project is an academic implementation focused on NSE stock-direction classification.
+<!-- Add only images that exist in the repository, for example:
+![Prediction view](path/to/your_screenshot.png)
+-->
 
-It should **not** be described as a direct reproduction of another paper's experimental results.
-
-The implementation differs according to:
-
-- Market
-- Dataset
-- Stock universe
-- Feature engineering
-- Train/validation/test protocol
-- Genetic Algorithm configuration
-- Model configuration
-- Target definition
-- Universal LSTM integration
-
-The project does not hard-code a target accuracy.
-
-Unexpectedly high performance should be investigated for possible data leakage or experimental issues.
+_Add application screenshots and result figures here. Reference only image files that actually exist in the repository._
 
 ---
 
-# 🔮 Future Scope
+## 🔬 Methodology
 
-## 🌐 Web Dashboard
+1. **Data preparation** — historical NSE OHLCV data for a 100-stock universe, ending on 2023-12-29.
+2. **Feature engineering** — 84 relative technical features, computed separately within each stock so no information crosses between companies.
+3. **Target** — next-day closing direction (UP / DOWN).
+4. **Feature selection** — a Genetic Algorithm selects 43 of the 84 features.
+5. **Model training** — a universal XGBoost classifier on the selected features, and a universal LSTM on 60-trading-day windows.
+6. **Evaluation** — Accuracy, Precision, Recall, F1 and ROC-AUC, stored as recorded results.
+7. **Deployment** — trained artifacts are loaded by the Streamlit app, which computes the same features on fresh inference data.
 
-Develop a Streamlit-based dashboard containing:
-
-```text
-Stock Selection
-      ↓
-Live/Latest Market Data
-      ↓
-Feature Engineering
-      ↓
-GA-XGBoost + LSTM
-      ↓
-Prediction
-      ↓
-Interactive Dashboard
-```
-
-## 🎨 Advanced UI/UX
-
-Future interface features:
-
-- 🌙 Dark / light mode
-- 📊 Interactive TradingView-style charts
-- 🔎 Searchable stock selector
-- 🟢 Real-time prediction cards
-- 📈 Confidence gauge
-- 🧠 Explainable AI panel
-- 📱 Responsive mobile layout
-- 📊 Historical prediction performance
-- 🔔 Optional alerts
-- 📋 Model comparison dashboard
-
-## 🤖 Explainable AI
-
-Future versions can integrate feature-level explanations such as SHAP-based interpretation to help users understand which features influenced the prediction.
+The methodology is an adaptation of the idea of combining Genetic Algorithm feature selection with XGBoost; it is not a reproduction of any published experiment.
 
 ---
 
-# 👨‍💻 Author
+## ⚠️ Limitations
 
-### Punithreddy K R
-
-**Computer Science and Engineering**  
-**Sri Krishna Institute of Technology, Bengaluru**
-
-Academic project focused on:
-
-> Artificial Intelligence • Machine Learning • Deep Learning • Financial Data Analytics
-
----
-
-# ⚠️ Disclaimer
-
-This project is developed for **academic, educational, and research purposes only**.
-
-Stock-market prediction is inherently uncertain. Model predictions are not guaranteed to be accurate and should **not** be interpreted as financial advice, investment recommendations, or guarantees of future returns.
-
-Always perform independent financial research and consult a qualified financial professional before making investment decisions.
+* **Direction only.** The models predict UP / DOWN, not prices or magnitudes.
+* **Training cut-off.** The models were trained on historical data ending **2023-12-29**. Fetching newer data from Yahoo Finance supplies fresh *inputs*; it does **not** retrain the models on newer market conditions.
+* **Market regime drift.** Patterns learned from past data may not hold in future conditions.
+* **Noisy target.** Next-day direction is close to random for liquid stocks; small differences from chance should not be over-interpreted.
+* **Technical features only.** News, fundamentals, macro events and order-book information are not used.
+* **Data-source dependence.** Inference quality depends on the availability and correctness of Yahoo Finance data or the uploaded CSV.
+* **Not a trading system.** The app does not place trades and is not a real-time trading tool.
 
 ---
 
-<p align="center">
-  <strong>📈 Universal Stock AI • Research • Experiment • Analyze</strong>
-</p>
+## 📜 Disclaimer
 
-<p align="center">
-  Made with Python, XGBoost, TensorFlow & ❤️
-</p>
+> This project is for **educational and research purposes only**. It is **not financial advice**, and it does not guarantee any prediction or outcome. Do not use it to make investment or trading decisions. Trading and investing involve risk, including loss of capital.
+
+---
+
+## 👤 Author
+
+**Varun S**
+Computer Science & Engineering
+
+GitHub: [https://github.com/varuns1602-D](https://github.com/varuns1602-D)
+
+---
+
+## 🚀 Future Improvements
+
+* Periodic **retraining** on newer data so the models reflect recent market conditions
+* Evaluation on a rolling / walk-forward basis with a published history of results
+* Additional model families and ensembling strategies for comparison
+* Optional use of market-wide (index) features
+* Probability **calibration** and clearer confidence reporting
+* Automated tests and continuous integration for the pipeline
+* Exportable prediction reports
+
+---
+
+<div align="center">
+
+⭐ If you find this project useful, consider starring the repository.
+
+</div>
